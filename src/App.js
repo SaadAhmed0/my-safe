@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useMemo } from 'react';
+import { ethers } from 'ethers';
+import { SafeProvider, useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk';
+import { SafeAppProvider } from '@safe-global/safe-apps-provider';
 
-function App() {
+const App = () => {
+  // This component now uses the useSafeAppsSDK hook within the SafeProvider context
+  const { sdk, safe } = useSafeAppsSDK();
+  const web3Provider = useMemo(() => new ethers.providers.Web3Provider(new SafeAppProvider(safe, sdk)), [sdk, safe]);
+  console.log(web3Provider);
+  // use web3Provider with contracts here
+  // ...
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {/* Your JSX here. */}
+      My Safe App
     </div>
   );
-}
+};
 
-export default App;
+// This is the root of your React application, which should be wrapped by SafeProvider
+const Root = () => {
+  return (
+    <SafeProvider>
+      <App />
+    </SafeProvider>
+  );
+};
+
+export default Root;
